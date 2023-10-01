@@ -6,7 +6,7 @@ return {
   {
     "simrat39/rust-tools.nvim",
     ft = "rust",
-    dependencies = {'neovim/nvim-lspconfig', 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap'},
+    dependencies = { 'neovim/nvim-lspconfig', 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
     config = function()
       require("rust-tools").setup({})
     end
@@ -26,7 +26,7 @@ return {
     config = function()
       require("toggleterm").setup {
         open_mapping = [[<c-t>]],
-        winbar = {enabled = true}
+        winbar = { enabled = true }
       }
     end
   },
@@ -45,6 +45,16 @@ return {
     event = "BufReadPost xmake.lua",
     config = true,
     dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+  },
+  {
+    'glacambre/firenvim',
+
+    -- Lazy load firenvim
+    -- Explanation: https://github.com/folke/lazy.nvim/discussions/463#discussioncomment-4819297
+    lazy = not vim.g.started_by_firenvim,
+    build = function()
+      vim.fn["firenvim#install"](0)
+    end
   },
 
   {

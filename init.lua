@@ -294,15 +294,55 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
+-- Neovide
+if vim.g.neovide then
+  vim.o.guifont = "FiraCode Nerd Font Reg" -- text below applies for Vimscript
+  vim.g.neovide_floating_blur_amount_x = 2.0
+  vim.g.neovide_floating_blur_amount_y = 2.0
+  vim.g.neovide_hide_mouse_when_typing = true
+  vim.g.neovide_cursor_vfx_mode = "default"
+  vim.g.neovide_pumblend = 70
+  vim.g.neovide_winblend = 70
+end
+
 -- [[ Basic Keymaps ]]
 
 -- Keymaps for better default experience
--- See `:help vim.keymap.set()`
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
+vim.keymap.set({ 'i', 'c' }, '<C-v>', '<C-r>+')
 
 -- Remap for dealing with word wrap
 vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+
+-- Keep cursor in view
+vim.keymap.set('n', "<C-d>", "<C-d>zz", { noremap = true, silent = true })
+vim.keymap.set('n', "<C-u>", "<C-u>zz", { noremap = true, silent = true })
+vim.keymap.set("n", "n", "nzzzv")
+vim.keymap.set("n", "N", "Nzzzv")
+
+-- move lines
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
+
+-- Terminal
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>") -- Escape
+vim.keymap.set('t', '<C-v>', function() return '<C-\\><C-N>"+pi' end, { expr = true })
+
+-- Windows
+vim.keymap.set("t", "<C-w>", "<C-\\><C-n><C-w>")
+vim.keymap.set("t", "<A-h>", "<C-\\><C-N><C-w>h")
+vim.keymap.set("t", "<A-j>", "<C-\\><C-N><C-w>j")
+vim.keymap.set("t", "<A-k>", "<C-\\><C-N><C-w>k")
+vim.keymap.set("t", "<A-l>", "<C-\\><C-N><C-w>l")
+vim.keymap.set("i", "<A-h>", "<C-\\><C-N><C-w>h")
+vim.keymap.set("i", "<A-j>", "<C-\\><C-N><C-w>j")
+vim.keymap.set("i", "<A-k>", "<C-\\><C-N><C-w>k")
+vim.keymap.set("i", "<A-l>", "<C-\\><C-N><C-w>l")
+vim.keymap.set("n", "<A-h>", "<C-w>h")
+vim.keymap.set("n", "<A-j>", "<C-w>j")
+vim.keymap.set("n", "<A-k>", "<C-w>k")
+vim.keymap.set("n", "<A-l>", "<C-w>l")
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
@@ -326,6 +366,7 @@ if not vim.g.vscode then
           ['<C-d>'] = false,
         },
       },
+      winblend = 70,
     },
   }
 
@@ -441,25 +482,6 @@ local on_attach = function(_, bufnr)
     vim.keymap.set('n', keys, func, { buffer = bufnr, desc = desc })
   end
 
-  vim.keymap.set('n', "<C-d>", "<C-d>zz", { noremap = true, silent = true })
-  vim.keymap.set('n', "<C-u>", "<C-u>zz", { noremap = true, silent = true })
-  vim.keymap.set("n", "n", "nzzzv")
-  vim.keymap.set("n", "N", "Nzzzv")
-  vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
-  vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
-  vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
-  vim.keymap.set("t", "<A-h>", "<C-\\><C-N><C-w>h")
-  vim.keymap.set("t", "<A-j>", "<C-\\><C-N><C-w>j")
-  vim.keymap.set("t", "<A-k>", "<C-\\><C-N><C-w>k")
-  vim.keymap.set("t", "<A-l>", "<C-\\><C-N><C-w>l")
-  vim.keymap.set("i", "<A-h>", "<C-\\><C-N><C-w>h")
-  vim.keymap.set("i", "<A-j>", "<C-\\><C-N><C-w>j")
-  vim.keymap.set("i", "<A-k>", "<C-\\><C-N><C-w>k")
-  vim.keymap.set("i", "<A-l>", "<C-\\><C-N><C-w>l")
-  vim.keymap.set("n", "<A-h>", "<C-w>h")
-  vim.keymap.set("n", "<A-j>", "<C-w>j")
-  vim.keymap.set("n", "<A-k>", "<C-w>k")
-  vim.keymap.set("n", "<A-l>", "<C-w>l")
 
   nmap('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
   nmap('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
