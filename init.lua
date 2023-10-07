@@ -224,7 +224,7 @@ if not vim.g.vscode then
     -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
     --       These are some example plugins that I've included in the kickstart repository.
     --       Uncomment any of the lines below to enable them.
-    require 'kickstart.plugins.autoformat',
+    -- require 'kickstart.plugins.autoformat',
     require 'kickstart.plugins.debug',
 
     -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -294,9 +294,30 @@ vim.o.completeopt = 'menuone,noselect'
 -- NOTE: You should make sure your terminal supports this
 vim.o.termguicolors = true
 
--- Neovide
-if vim.g.neovide then
-  vim.o.guifont = "FiraCode Nerd Font Reg" -- text below applies for Vimscript
+-- Font
+vim.g.gui_font_face = "VictorMono Nerd Font"
+-- vim.o.guifont = "FiraCode Nerd Font" 
+-- vim.g.gui_font_face = "JetBrainsMono Nerd Font"
+vim.g.gui_font_default_size = 14
+vim.g.gui_font_size = vim.g.gui_font_default_size
+RefreshGuiFont = function()
+  vim.opt.guifont = string.format("%s:h%s",vim.g.gui_font_face, vim.g.gui_font_size)
+end
+ResizeGuiFont = function(delta)
+  vim.g.gui_font_size = vim.g.gui_font_size + delta
+  RefreshGuiFont()
+end
+ResetGuiFont = function ()
+  vim.g.gui_font_size = vim.g.gui_font_default_size
+  RefreshGuiFont()
+end
+ResetGuiFont()
+
+vim.keymap.set({'n', 'i'}, "<C-+>", function() ResizeGuiFont(1)  end, { noremap = true, silent = true })
+vim.keymap.set({'n', 'i'}, "<C-->", function() ResizeGuiFont(-1) end, { noremap = true, silent = true })
+vim.keymap.set({'n', 'i'}, "<C-BS>", function() ResetGuiFont() end, { noremap = true, silent = true })
+
+if vim.g.neovide then -- Neovide
   vim.g.neovide_floating_blur_amount_x = 2.0
   vim.g.neovide_floating_blur_amount_y = 2.0
   vim.g.neovide_hide_mouse_when_typing = true
@@ -506,9 +527,12 @@ local on_attach = function(_, bufnr)
   end, '[W]orkspace [L]ist Folders')
 
   -- Create a command `:Format` local to the LSP buffer
-  vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
-    vim.lsp.buf.format()
-  end, { desc = 'Format current buffer with LSP' })
+  vim.api.nvim_buf_create_user_command(
+    bufnr,
+    'Format',
+    function(_) vim.lsp.buf.format() end,
+    { desc = 'Format current buffer with LSP' }
+  )
 end
 
 -- Enable the following language servers

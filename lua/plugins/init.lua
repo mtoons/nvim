@@ -22,13 +22,10 @@ return {
   {
     'akinsho/toggleterm.nvim',
     version = "*",
-    opts = {},
-    config = function()
-      require("toggleterm").setup {
-        open_mapping = [[<c-t>]],
-        winbar = { enabled = true }
-      }
-    end
+    opts = {
+      open_mapping = [[<c-t>]],
+      winbar = { enabled = true }
+    },
   },
 
   {
@@ -44,8 +41,14 @@ return {
     lazy = true,
     event = "BufReadPost xmake.lua",
     config = true,
+    opts = {
+      compile_command = { -- compile_command file generation configuration
+        dir = "build",    -- location of the generated file
+      },
+    },
     dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
   },
+
   {
     'glacambre/firenvim',
 
