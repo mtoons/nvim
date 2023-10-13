@@ -1,42 +1,3 @@
---[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-
-Kickstart.nvim is *not* a distribution.
-
-Kickstart.nvim is a template for your own configuration.
-  The goal is that you can read every line of code, top-to-bottom, understand
-  what your configuration is doing, and modify it to suit your needs.
-
-  Once you've done that, you should start exploring, configuring and tinkering to
-  explore Neovim!
-
-  If you don't know anything about Lua, I recommend taking some time to read through
-  a guide. One possible example:
-  - https://learnxinyminutes.com/docs/lua/
-
-
-  And then you can explore or search through `:help lua-guide`
-  - https://neovim.io/doc/user/lua-guide.html
-
-
-Kickstart Guide:
-
-I have left several `:help X` comments throughout the init.lua
-You should run that command and read that help section for more information.
-
-In addition, I have some `NOTE:` items throughout the file.
-These are for you, the reader to help understand what is happening. Feel free to delete
-them once you know what you're doing, but they should serve as a guide for when you
-are first encountering a few different constructs in your nvim config.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now :)
---]]
 -- Set <space> as the leader key
 -- See `:help mapleader`
 -- NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -178,14 +139,9 @@ if not vim.g.vscode then
     },
 
     {
-      -- Add indentation guides even on blank lines
-      'lukas-reineke/indent-blankline.nvim',
-      -- Enable `lukas-reineke/indent-blankline.nvim`
-      -- See `:help indent_blankline.txt`
-      opts = {
-        char = '┊',
-        show_trailing_blankline_indent = false,
-      },
+      "lukas-reineke/indent-blankline.nvim",
+      main = "ibl",
+      opts = {scope = {show_start = false,},},
     },
 
     -- "gc" to comment visual regions/lines
@@ -209,7 +165,7 @@ if not vim.g.vscode then
             return vim.fn.executable 'make' == 1
           end,
         },
-      },
+      }
     },
 
     {
@@ -298,7 +254,7 @@ vim.o.termguicolors = true
 vim.g.gui_font_face = "VictorMono Nerd Font"
 -- vim.o.guifont = "FiraCode Nerd Font" 
 -- vim.g.gui_font_face = "JetBrainsMono Nerd Font"
-vim.g.gui_font_default_size = 14
+vim.g.gui_font_default_size = 15
 vim.g.gui_font_size = vim.g.gui_font_default_size
 RefreshGuiFont = function()
   vim.opt.guifont = string.format("%s:h%s",vim.g.gui_font_face, vim.g.gui_font_size)
@@ -365,7 +321,6 @@ vim.keymap.set("n", "<A-j>", "<C-w>j")
 vim.keymap.set("n", "<A-k>", "<C-w>k")
 vim.keymap.set("n", "<A-l>", "<C-w>l")
 
--- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
 local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -389,7 +344,13 @@ if not vim.g.vscode then
       },
       winblend = 70,
     },
+    extensions = {
+      xray23 = {
+        sessionDir = vim.fn.stdpath("data") .. "/session"
+      }
+    }
   }
+  require("telescope").load_extension("xray23")
 
   -- Enable telescope fzf native, if installed
   pcall(require('telescope').load_extension, 'fzf')
@@ -412,7 +373,14 @@ if not vim.g.vscode then
   vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
   vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
   vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
+  vim.keymap.set('n', '<leader>ss', '<cmd>Telescope xray23 list<cr>',{ desc= '[S]earch [S]ession' }) -- there is a bug so type ":source" once the file is loaded
+  vim.keymap.set("n", "<leader>td", function() require("trouble").toggle("document_diagnostics") end)
+  vim.keymap.set("n", "<leader>tq", function() require("trouble").toggle("quickfix") end, { desc = '[T]rouble [Q]uickfix'})
 
+  -- zen-mode
+  vim.keymap.set("n", "<leader>z", ":ZenMode<CR>", { desc = '[Z]en mode', noremap = true, silent = true })
+
+  -- [[ Highlight on yank ]]
   -- [[ Configure Treesitter ]]
   -- See `:help nvim-treesitter`
   require('nvim-treesitter.configs').setup {
