@@ -4,6 +4,13 @@
 -- See the kickstart.nvim README for more information
 return {
   "HUAHUAI23/telescope-session.nvim",
+
+  {
+    "LunarVim/bigfile.nvim",
+    opts = {
+    },
+  },
+
   {
     "simrat39/rust-tools.nvim",
     ft = "rust",
@@ -13,19 +20,19 @@ return {
     end
   },-- Lua
 
-  {
-    "folke/trouble.nvim",
-    dependencies = { "nvim-tree/nvim-web-devicons" },
-    opts = {
-    },
-  },
+  -- {
+  --   "folke/trouble.nvim",
+  --   dependencies = { "nvim-tree/nvim-web-devicons" },
+  --   opts = {
+  --   },
+  -- },
 
-  {
+--[[   {
     "folke/todo-comments.nvim",
     dependencies = { "nvim-lua/plenary.nvim" },
     opts = {
     }
-  },
+  }, ]]
 
   {
     "folke/zen-mode.nvim",
@@ -39,14 +46,14 @@ return {
     end,
   },
 
-  {
-    'akinsho/toggleterm.nvim',
-    version = "*",
-    opts = {
-      open_mapping = [[<c-t>]],
-      winbar = { enabled = true }
-    },
-  },
+  -- {
+  --   'akinsho/toggleterm.nvim',
+  --   version = "*",
+  --   opts = {
+  --     open_mapping = [[<c-t>]],
+  --     winbar = { enabled = true }
+  --   },
+  -- },
 
   {
     "max397574/better-escape.nvim",
@@ -55,19 +62,19 @@ return {
     end,
   },
 
-  {
-    "Mythos-404/xmake.nvim",
-    -- branch = "v1",
-    lazy = true,
-    event = "BufReadPost xmake.lua",
-    config = true,
-    opts = {
-      compile_command = { -- compile_command file generation configuration
-        dir = "build",    -- location of the generated file
-      },
-    },
-    dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
-  },
+  -- {
+  --   "Mythos-404/xmake.nvim",
+  --   -- branch = "v1",
+  --   lazy = true,
+  --   event = "BufReadPost xmake.lua",
+  --   config = true,
+  --   opts = {
+  --     compile_command = { -- compile_command file generation configuration
+  --       dir = "build",    -- location of the generated file
+  --     },
+  --   },
+  --   dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
+  -- },
 
   {
     'glacambre/firenvim',
