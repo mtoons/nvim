@@ -91,9 +91,6 @@ if not vim.g.vscode then
           changedelete = { text = '~' },
         },
         on_attach = function(bufnr)
-          vim.keymap.set('n', '<leader>hp', require('gitsigns').preview_hunk,
-            { buffer = bufnr, desc = 'Preview git hunk' })
-
           -- don't override the built-in and fugitive keymaps
           local gs = package.loaded.gitsigns
           vim.keymap.set({ 'n', 'v' }, ']c', function()
@@ -141,7 +138,11 @@ if not vim.g.vscode then
     {
       "lukas-reineke/indent-blankline.nvim",
       main = "ibl",
-      opts = {scope = {show_start = false,},},
+      opts = {
+        indent = { char = "│", },
+        scope = { show_start = false, },
+        exclude = { filetypes = { "dashboard" }, },
+      },
     },
 
     -- "gc" to comment visual regions/lines
@@ -378,7 +379,7 @@ if not vim.g.vscode then
   vim.keymap.set("n", "<leader>tq", function() require("trouble").toggle("quickfix") end, { desc = '[T]rouble [Q]uickfix'})
 
   -- zen-mode
-  vim.keymap.set("n", "<leader>z", ":ZenMode<CR>", { desc = '[Z]en mode', noremap = true, silent = true })
+  vim.keymap.set("n", "<leader>z", ":NoNeckPain<CR>", { desc = '[Z]en mode', noremap = true, silent = true })
 
   -- [[ Highlight on yank ]]
   -- [[ Configure Treesitter ]]
@@ -451,7 +452,7 @@ if not vim.g.vscode then
   vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
   vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
   -- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-  vim.keymap.set('n', '<leader>e', ":Neotree toggle<CR>", { desc = '[E]xplore', noremap = true, silent = true })
+  vim.keymap.set('n', '<leader>e', require("nvim-tree.api").tree.toggle, { desc = '[E]xplore', noremap = true, silent = true })
   vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 end
 -- [[ Configure LSP ]]
