@@ -5,6 +5,8 @@
 return {
   "HUAHUAI23/telescope-session.nvim",
   "rcarriga/nvim-notify",
+  "onsails/lspkind.nvim",
+  "hrsh7th/cmp-calc",
 
   {
     "nvimdev/dashboard-nvim",

@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-fields
 -- Set <space> as the leader key
 -- See `:help mapleader`
 -- NOTE: Must happen before plugins are required (otherwise wrong leader will be used)
@@ -49,7 +50,7 @@ if not vim.g.vscode then
 
         -- Useful status updates for LSP
         -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-        { 'j-hui/fidget.nvim', tag = 'legacy', opts = {} },
+        { 'j-hui/fidget.nvim',       tag = 'legacy', opts = {} },
 
         -- Additional lua configuration, makes nvim stuff amazing!
         'folke/neodev.nvim',
@@ -253,26 +254,26 @@ vim.o.termguicolors = true
 
 -- Font
 vim.g.gui_font_face = "VictorMono Nerd Font"
--- vim.o.guifont = "FiraCode Nerd Font" 
+-- vim.o.guifont = "FiraCode Nerd Font"
 -- vim.g.gui_font_face = "JetBrainsMono Nerd Font"
 vim.g.gui_font_default_size = 15
 vim.g.gui_font_size = vim.g.gui_font_default_size
 RefreshGuiFont = function()
-  vim.opt.guifont = string.format("%s:h%s",vim.g.gui_font_face, vim.g.gui_font_size)
+  vim.opt.guifont = string.format("%s:h%s", vim.g.gui_font_face, vim.g.gui_font_size)
 end
 ResizeGuiFont = function(delta)
   vim.g.gui_font_size = vim.g.gui_font_size + delta
   RefreshGuiFont()
 end
-ResetGuiFont = function ()
+ResetGuiFont = function()
   vim.g.gui_font_size = vim.g.gui_font_default_size
   RefreshGuiFont()
 end
 ResetGuiFont()
 
-vim.keymap.set({'n', 'i'}, "<C-+>", function() ResizeGuiFont(1)  end, { noremap = true, silent = true })
-vim.keymap.set({'n', 'i'}, "<C-->", function() ResizeGuiFont(-1) end, { noremap = true, silent = true })
-vim.keymap.set({'n', 'i'}, "<C-BS>", function() ResetGuiFont() end, { noremap = true, silent = true })
+vim.keymap.set({ 'n', 'i' }, "<C-+>", function() ResizeGuiFont(1) end, { noremap = true, silent = true })
+vim.keymap.set({ 'n', 'i' }, "<C-->", function() ResizeGuiFont(-1) end, { noremap = true, silent = true })
+vim.keymap.set({ 'n', 'i' }, "<C-BS>", function() ResetGuiFont() end, { noremap = true, silent = true })
 
 if vim.g.neovide then -- Neovide
   vim.g.neovide_floating_blur_amount_x = 2.0
@@ -374,9 +375,10 @@ if not vim.g.vscode then
   vim.keymap.set('n', '<leader>sg', require('telescope.builtin').live_grep, { desc = '[S]earch by [G]rep' })
   vim.keymap.set('n', '<leader>sd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
   vim.keymap.set('n', '<leader>sr', require('telescope.builtin').resume, { desc = '[S]earch [R]esume' })
-  vim.keymap.set('n', '<leader>ss', '<cmd>Telescope xray23 list<cr>',{ desc= '[S]earch [S]ession' }) -- there is a bug so type ":source" once the file is loaded
+  vim.keymap.set('n', '<leader>ss', '<cmd>Telescope xray23 list<cr>', { desc = '[S]earch [S]ession' }) -- there is a bug so type ":source" once the file is loaded
   vim.keymap.set("n", "<leader>td", function() require("trouble").toggle("document_diagnostics") end)
-  vim.keymap.set("n", "<leader>tq", function() require("trouble").toggle("quickfix") end, { desc = '[T]rouble [Q]uickfix'})
+  vim.keymap.set("n", "<leader>tq", function() require("trouble").toggle("quickfix") end,
+    { desc = '[T]rouble [Q]uickfix' })
 
   -- zen-mode
   vim.keymap.set("n", "<leader>z", ":NoNeckPain<CR>", { desc = '[Z]en mode', noremap = true, silent = true })
@@ -452,7 +454,8 @@ if not vim.g.vscode then
   vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous diagnostic message' })
   vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnostic message' })
   -- vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
-  vim.keymap.set('n', '<leader>e', require("nvim-tree.api").tree.toggle, { desc = '[E]xplore', noremap = true, silent = true })
+  vim.keymap.set('n', '<leader>e', require("nvim-tree.api").tree.toggle,
+    { desc = '[E]xplore', noremap = true, silent = true })
   vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 end
 -- [[ Configure LSP ]]
@@ -567,41 +570,39 @@ if not vim.g.vscode then
         luasnip.lsp_expand(args.body)
       end,
     },
+    formatting = {
+      format = require('lspkind').cmp_format(),
+      mode = "symbol",
+    },
     mapping = cmp.mapping.preset.insert {
       ['<C-n>'] = cmp.mapping.select_next_item(),
       ['<C-p>'] = cmp.mapping.select_prev_item(),
       ['<C-d>'] = cmp.mapping.scroll_docs(-4),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
-      ['<C-Space>'] = cmp.mapping.complete {},
-      ['<CR>'] = cmp.mapping.confirm {
+      ['<C-Space>'] = cmp.mapping.confirm {
         behavior = cmp.ConfirmBehavior.Replace,
         select = true,
       },
-      ['<Tab>'] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.select_next_item()
-        elseif luasnip.expand_or_locally_jumpable() then
-          luasnip.expand_or_jump()
-        else
-          fallback()
-        end
-      end, { 'i', 's' }),
-      ['<S-Tab>'] = cmp.mapping(function(fallback)
-        if cmp.visible() then
-          cmp.select_prev_item()
-        elseif luasnip.locally_jumpable(-1) then
-          luasnip.jump(-1)
-        else
-          fallback()
-        end
-      end, { 'i', 's' }),
     },
     sources = {
       { name = 'nvim_lsp' },
       { name = 'luasnip' },
+      { name = 'calc' },
     },
     {
       { name = 'buffer' }
+    },
+    window = {
+      completion = {
+        side_padding = 0,
+        winhighlight = "Normal:CmpPmenu",
+        scrollbar = false,
+        border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│', }
+      },
+      documentation = {
+        border = { '╭', '─', '╮', '│', '╯', '─', '╰', '│', },
+        winhighlight = "Normal:CmpDoc",
+      },
     },
   }
 
