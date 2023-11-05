@@ -85,11 +85,12 @@ if not vim.g.vscode then
       opts = {
         -- See `:help gitsigns.txt`
         signs = {
-          add = { text = '+' },
-          change = { text = '~' },
-          delete = { text = '_' },
-          topdelete = { text = '‾' },
-          changedelete = { text = '~' },
+          add          = { text = '' },
+          change       = { text = '' },
+          delete       = { text = '' },
+          topdelete    = { text = '' },
+          changedelete = { text = '' },
+          untracked    = { text = '' },
         },
         on_attach = function(bufnr)
           -- don't override the built-in and fugitive keymaps
@@ -115,9 +116,9 @@ if not vim.g.vscode then
       priority = 1000,
       config = function()
         if package.config:sub(1, 1) == "\\" then
-          vim.cmd.colorscheme 'catppuccin-macchiato'
-        else
           vim.cmd.colorscheme 'catppuccin-mocha'
+        else
+          vim.cmd.colorscheme 'catppuccin-macchiato'
         end
       end,
     },
@@ -182,7 +183,7 @@ if not vim.g.vscode then
     -- NOTE: Next Step on Your Neovim Journey: Add/Configure additional "plugins" for kickstart
     --       These are some example plugins that I've included in the kickstart repository.
     --       Uncomment any of the lines below to enable them.
-    -- require 'kickstart.plugins.autoformat',
+    require 'kickstart.plugins.autoformat',
     require 'kickstart.plugins.debug',
 
     -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
@@ -208,7 +209,6 @@ end
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
--- NOTE: You can change these options as you wish!
 
 -- Fold
 vim.opt.foldmethod = "expr"
@@ -519,7 +519,7 @@ local servers = {
   clangd = {},
   -- gopls = {},
   -- pyright = {},
-  -- rust_analyzer = {},
+  rust_analyzer = {},
   -- tsserver = {},
   -- html = { filetypes = { 'html', 'twig', 'hbs'} },
 
@@ -535,6 +535,17 @@ local servers = {
 if not vim.g.vscode then
   require('neodev').setup()
 
+  local signs = { Error = "󰅚 ", Warn = "󰀪 ", Hint = "󰌶 ", Info = " " }
+  for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+  end
+  vim.diagnostic.config({
+    virtual_text = {
+      prefix = '●',
+    }
+  })
+
   -- nvim-cmp supports additional completion capabilities, so broadcast that to servers
   local capabilities = vim.lsp.protocol.make_client_capabilities()
   capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
@@ -546,6 +557,23 @@ if not vim.g.vscode then
     ensure_installed = vim.tbl_keys(servers),
   }
 
+  local border = {
+    { '╭', "FloatBorder" },
+    { '─', "FloatBorder" },
+    { '╮', "FloatBorder" },
+    { '│', "FloatBorder" },
+    { '╯', "FloatBorder" },
+    { '─', "FloatBorder" },
+    { '╰', "FloatBorder" },
+    { '│', "FloatBorder" },
+  }
+
+  -- LSP settings (for overriding per client)
+  local handlers = {
+    ["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = border }),
+    ["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = border }),
+  }
+
   mason_lspconfig.setup_handlers {
     function(server_name)
       require('lspconfig')[server_name].setup {
@@ -553,6 +581,7 @@ if not vim.g.vscode then
         on_attach = on_attach,
         settings = servers[server_name],
         filetypes = (servers[server_name] or {}).filetypes,
+        handlers = handlers,
       }
     end
   }
