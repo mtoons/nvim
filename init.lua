@@ -69,7 +69,7 @@ if not vim.g.vscode then
         'hrsh7th/cmp-nvim-lsp',
 
         -- Adds a number of user-friendly snippets
-        'rafamadriz/friendly-snippets',
+        'mtoons/friendly-snippets',
 
         'hrsh7th/cmp-buffer',
         'hrsh7th/cmp-path',
@@ -256,7 +256,7 @@ vim.o.termguicolors = true
 vim.g.gui_font_face = "VictorMono Nerd Font"
 -- vim.o.guifont = "FiraCode Nerd Font"
 -- vim.g.gui_font_face = "JetBrainsMono Nerd Font"
-vim.g.gui_font_default_size = 15
+vim.g.gui_font_default_size = 17
 vim.g.gui_font_size = vim.g.gui_font_default_size
 RefreshGuiFont = function()
   vim.opt.guifont = string.format("%s:h%s", vim.g.gui_font_face, vim.g.gui_font_size)
@@ -557,6 +557,16 @@ if not vim.g.vscode then
     ensure_installed = vim.tbl_keys(servers),
   }
 
+  -- set floating window background to normal color
+  local set_hl_for_floating_window = function()
+    vim.api.nvim_set_hl(0, 'NormalFloat', { link = 'Normal', })
+    vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none', })
+  end
+  set_hl_for_floating_window()
+  -- FIX: colorscheme change
+  vim.api.nvim_create_autocmd('ColorScheme',
+    { pattern = '*', desc = 'Avoid overwritten by loading color schemes later', callback = set_hl_for_floating_window, })
+
   local border = {
     { '╭', "FloatBorder" },
     { '─', "FloatBorder" },
@@ -591,7 +601,47 @@ if not vim.g.vscode then
   local cmp = require 'cmp'
   local luasnip = require 'luasnip'
   require('luasnip.loaders.from_vscode').lazy_load()
-  luasnip.config.setup {}
+  luasnip.config.set_config {
+    history = true,
+    updateevents = "TextChanged, TextChangedI",
+    enable_autosnippets = true,
+  }
+  vim.keymap.set(
+    { "i", "s" },
+    "<C-Space>",
+    function()
+      if luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      end
+    end
+  )
+  vim.keymap.set(
+    { "i", "s" },
+    "<C-BS>",
+    function()
+      if luasnip.expand_or_jumpable(-1) then
+        luasnip.expand_or_jump(-1)
+      end
+    end
+  )
+  vim.keymap.set(
+    { "i", "s" },
+    "<C-k>",
+    function()
+      if luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      end
+    end
+  )
+  vim.keymap.set(
+    { "i", "s" },
+    "<C-j>",
+    function()
+      if luasnip.expand_or_jumpable(-1) then
+        luasnip.expand_or_jump(-1)
+      end
+    end
+  )
 
   cmp.setup {
     snippet = {

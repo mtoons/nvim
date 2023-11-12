@@ -40,13 +40,6 @@ return {
           -- Keep original functionality
           require('mason-nvim-dap').default_setup(config)
         end,
-        cpp = function(config)
-          config.adapters = {
-            type = "executable",
-            command = "/Program Files/LLVM/bin/lldb.exe",
-          }
-          require('mason-nvim-dap').default_setup(config) -- don't forget this!
-        end,
       },
 
       -- You'll need to check that you have the required things installed

@@ -8,6 +8,26 @@ return {
   "onsails/lspkind.nvim",
   "hrsh7th/cmp-calc",
 
+  -- {
+  --   "folke/noice.nvim",
+  --   event = "VeryLazy",
+  --   opts = {
+  --   },
+  --   dependencies = {
+  --     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+  --     "MunifTanjim/nui.nvim",
+  --     -- OPTIONAL:
+  --     --   `nvim-notify` is only needed, if you want to use the notification view.
+  --     --   If not available, we use `mini` as the fallback
+  --     "rcarriga/nvim-notify",
+  --   }
+  -- },
+
+  {
+    'zadirion/Unreal.nvim',
+    dependencies = { "tpope/vim-dispatch" },
+  },
+
   {
     "nvimdev/dashboard-nvim",
     event = "VimEnter",
@@ -39,8 +59,12 @@ return {
             { action = "ene | startinsert", desc = " New file", icon = " ", key = "n" },
             { action = "Telescope find_files", desc = " Find file", icon = " ", key = "f" },
             { action = "Telescope live_grep", desc = " Find text", icon = " ", key = "g" },
-            { action = [[lua require("lazyvim.util").telescope.config_files()()]], desc = " Config", icon = " ",
-              key = "c" },
+            {
+              action = [[lua require("lazyvim.util").telescope.config_files()()]],
+              desc = " Config",
+              icon = " ",
+              key = "c"
+            },
             { action = "Lazy", desc = " Lazy", icon = "󰒲 ", key = "l" },
             { action = "qa", desc = " Quit", icon = " ", key = "q" },
           },
@@ -87,9 +111,11 @@ return {
       local hop = require('hop')
       local directions = require('hop.hint').HintDirection
       vim.keymap.set('', 'f',
-        function() hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true }) end, { remap = true })
+        function() hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true }) end,
+        { remap = true })
       vim.keymap.set('', 'F',
-        function() hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true }) end, { remap = true })
+        function() hop.hint_char1({ direction = directions.BEFORE_CURSOR, current_line_only = true }) end,
+        { remap = true })
       vim.keymap.set('', 't',
         function() hop.hint_char1({ direction = directions.AFTER_CURSOR, current_line_only = true, hint_offset = -1 }) end,
         { remap = true })
@@ -128,7 +154,7 @@ return {
       theme = "leaves",            -- "leaves", "snow", "stars", "xmas", "spring", "summer"
       max = 40,                    -- maximum number of drops on the screen
       interval = 150,              -- every 150ms we update the drops
-      screensaver = 1000 * 60 * 1, -- show after 5 minutes. Set to false, to disable
+      screensaver = 1000 * 60 * 5, -- show after 5 minutes. Set to false, to disable
       filetypes = {},              -- will enable/disable automatically for the following filetypes
     }
   },
@@ -241,14 +267,8 @@ return {
       require("nvim-tree").setup {
         prefer_startup_root = true,
         sync_root_with_cwd = true,
-        renderer = {
-          glyphs = {
-            git = {
-              unstaged = '',
-              staged = '',
-              deleted = '',
-            },
-          },
+        view = {
+          width = 45,
         },
       }
     end,
