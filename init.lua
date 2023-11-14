@@ -66,6 +66,7 @@ if not vim.g.vscode then
         'saadparwaiz1/cmp_luasnip',
 
         -- Adds LSP completion capabilities
+        'hrsh7th/cmp-nvim-lua',
         'hrsh7th/cmp-nvim-lsp',
 
         -- Adds a number of user-friendly snippets
@@ -246,6 +247,9 @@ vim.wo.signcolumn = 'yes'
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 
+-- nvim-notify as default
+vim.notify = require("notify")
+
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
@@ -273,7 +277,6 @@ ResetGuiFont()
 
 vim.keymap.set({ 'n', 'i' }, "<C-+>", function() ResizeGuiFont(1) end, { noremap = true, silent = true })
 vim.keymap.set({ 'n', 'i' }, "<C-->", function() ResizeGuiFont(-1) end, { noremap = true, silent = true })
-vim.keymap.set({ 'n', 'i' }, "<C-BS>", function() ResetGuiFont() end, { noremap = true, silent = true })
 
 if vim.g.neovide then -- Neovide
   vim.g.neovide_floating_blur_amount_x = 2.0
@@ -398,8 +401,6 @@ if not vim.g.vscode then
     incremental_selection = {
       enable = true,
       keymaps = {
-        init_selection = '<c-space>',
-        node_incremental = '<c-space>',
         scope_incremental = '<c-s>',
         node_decremental = '<M-space>',
       },
@@ -610,17 +611,17 @@ if not vim.g.vscode then
     { "i", "s" },
     "<C-Space>",
     function()
-      if luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
+      if luasnip.expand_or_jumpable(1) then
+        luasnip.expand_or_jump(1)
       end
     end
   )
   vim.keymap.set(
     { "i", "s" },
-    "<C-BS>",
+    "<C-Bs>",
     function()
-      if luasnip.expand_or_jumpable(-1) then
-        luasnip.expand_or_jump(-1)
+      if luasnip.jumpable(-1) then
+        luasnip.jump(-1)
       end
     end
   )
@@ -628,8 +629,8 @@ if not vim.g.vscode then
     { "i", "s" },
     "<C-k>",
     function()
-      if luasnip.expand_or_jumpable() then
-        luasnip.expand_or_jump()
+      if luasnip.expand_or_jumpable(1) then
+        luasnip.expand_or_jump(1)
       end
     end
   )
@@ -637,8 +638,8 @@ if not vim.g.vscode then
     { "i", "s" },
     "<C-j>",
     function()
-      if luasnip.expand_or_jumpable(-1) then
-        luasnip.expand_or_jump(-1)
+      if luasnip.jumpable(-1) then
+        luasnip.jump(-1)
       end
     end
   )
@@ -654,14 +655,16 @@ if not vim.g.vscode then
       mode = "symbol",
     },
     mapping = cmp.mapping.preset.insert {
-      ['<C-n>'] = cmp.mapping.select_next_item(),
-      ['<C-p>'] = cmp.mapping.select_prev_item(),
       ['<C-d>'] = cmp.mapping.scroll_docs(-4),
       ['<C-f>'] = cmp.mapping.scroll_docs(4),
+      ['<C-n>'] = cmp.mapping.select_next_item(),
+      ['<C-p>'] = cmp.mapping.select_prev_item(),
       ['<C-Space>'] = cmp.mapping.confirm {
         behavior = cmp.ConfirmBehavior.Replace,
         select = true,
       },
+      ['<c-y>'] = cmp.mapping.complete(),
+      ['<C-e>'] = cmp.mapping.abort(),
     },
     sources = {
       { name = 'nvim_lsp' },
