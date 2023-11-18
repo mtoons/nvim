@@ -116,11 +116,7 @@ if not vim.g.vscode then
       name = "catppuccin",
       priority = 1000,
       config = function()
-        if package.config:sub(1, 1) == "\\" then
-          vim.cmd.colorscheme 'catppuccin-mocha'
-        else
-          vim.cmd.colorscheme 'catppuccin-macchiato'
-        end
+        vim.cmd.colorscheme 'catppuccin-mocha'
       end,
     },
 

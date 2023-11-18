@@ -206,7 +206,8 @@ return {
     version = "*",
     opts = {
       open_mapping = [[<c-t>]],
-      winbar = { enabled = true }
+      direction = 'horizontal',
+      -- winbar = { enabled = true },
     },
   },
 
