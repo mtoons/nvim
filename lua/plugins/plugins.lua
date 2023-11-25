@@ -180,18 +180,20 @@ return {
     end
   }, -- Lua
 
-  -- {
-  --   "folke/trouble.nvim",
-  --   dependencies = { "nvim-tree/nvim-web-devicons" },
-  --   opts = {
-  --   },
-  -- },
+  {
+    "folke/trouble.nvim",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+    },
+  },
 
   {
     "folke/todo-comments.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
-    opts = {
-    }
+    dependencies = { "nvim-lua/plenary.nvim", "folke/trouble.nvim" },
+    config = function()
+      vim.keymap.set('n', "<leader>tt", "<cmd>TodoTrouble<cr>", { desc = "[T]rouble [T]odo" })
+      require("todo-comments").setup()
+    end,
   },
 
   {
