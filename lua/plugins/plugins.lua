@@ -4,13 +4,36 @@ return {
   "onsails/lspkind.nvim",
   "hrsh7th/cmp-calc",
   "lervag/vimtex",
+  "ziglang/zig.vim",
   { 'rose-pine/neovim', name = 'rose-pine' },
+
+  {
+    "ThePrimeagen/harpoon",
+    branch = "harpoon2",
+    dependencies = {"nvim-lua/plenary.nvim"},
+    config = function()
+      local harpoon = require("harpoon")
+
+      harpoon:setup()
+
+      vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end)
+      vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
+
+      vim.keymap.set("n", "<C-&>", function() harpoon:list():select(1) end)
+      vim.keymap.set("n", "<C-é>", function() harpoon:list():select(2) end)
+      vim.keymap.set("n", '<C-">', function() harpoon:list():select(3) end)
+      vim.keymap.set("n", "<C-'>", function() harpoon:list():select(4) end)
+
+      -- Toggle previous & next buffers stored within Harpoon list
+      vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
+      vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
+    end,
+  },
 
   {
     'stevearc/conform.nvim',
     opts = {
       formatters_by_ft = {
-        lua = { "stylua" },
         -- Conform will run multiple formatters sequentially
         python = { "isort", "black" },
         -- Use a sub-list to run only the first available formatter
@@ -165,10 +188,10 @@ return {
     "folke/drop.nvim",
     event = "VimEnter",
     opts = {
-      theme = "leaves",            -- "leaves", "snow", "stars", "xmas", "spring", "summer"
+      theme = "xmas",            -- "leaves", "snow", "stars", "xmas", "spring", "summer"
       max = 40,                    -- maximum number of drops on the screen
       interval = 150,              -- every 150ms we update the drops
-      screensaver = 1000 * 60 * 5, -- show after 5 minutes. Set to false, to disable
+      screensaver = 1000 * 60 * 30, -- show after 5 minutes. Set to false, to disable
       filetypes = {},              -- will enable/disable automatically for the following filetypes
     }
   },
