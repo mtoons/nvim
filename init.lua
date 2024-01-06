@@ -277,6 +277,9 @@ end
 
 -- [[ Basic Keymaps ]]
 
+-- end of line
+vim.keymap.set("i", "<C-m>", "<C-o>$")
+
 -- Keymaps for better default experience
 vim.keymap.set({ 'n', 'v' }, '<Space>', '<Nop>', { silent = true })
 vim.keymap.set({ 'i', 'c' }, '<C-v>', '<C-r>+')
@@ -295,11 +298,11 @@ vim.keymap.set("n", "N", "Nzzzv")
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
--- Terminal
+-- terminal
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>") -- Escape
 vim.keymap.set('t', '<C-v>', function() return '<C-\\><C-N>"+pi' end, { expr = true })
 
--- Windows
+-- windows
 vim.keymap.set("t", "<C-w>", "<C-\\><C-n><C-w>")
 vim.keymap.set("t", "<A-h>", "<C-\\><C-N><C-w>h")
 vim.keymap.set("t", "<A-j>", "<C-\\><C-N><C-w>j")
