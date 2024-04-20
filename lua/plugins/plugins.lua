@@ -3,9 +3,43 @@ return {
   "rcarriga/nvim-notify",
   "onsails/lspkind.nvim",
   "hrsh7th/cmp-calc",
-  "lervag/vimtex",
   "ziglang/zig.vim",
   { 'rose-pine/neovim', name = 'rose-pine' },
+
+  {
+    "lervag/vimtex",
+    init = function()
+      vim.cmd [[
+        " viewer
+        let g:vimtex_view_general_viewer = 'SumatraPDF'
+        let g:vimtex_view_general_options
+      \ = '-reuse-instance -forward-search @tex @line @pdf'
+        " let g:vimtex_view_method = 'mupdf'
+        " let g:vimtex_view_general_viewer = 'mupdf'
+
+        " compiler
+        let g:vimtex_compiler_latexmk_engines = {
+        \ '_'                : '-lualatex',
+        \ 'pdfdvi'           : '-pdfdvi',
+        \ 'pdfps'            : '-pdfps',
+        \ 'pdflatex'         : '-pdf',
+        \ 'luatex'           : '-lualatex',
+        \ 'lualatex'         : '-lualatex',
+        \ 'xelatex'          : '-xelatex',
+        \ 'context (pdftex)' : '-pdf -pdflatex=texexec',
+        \ 'context (luatex)' : '-pdf -pdflatex=context',
+        \ 'context (xetex)'  : '-pdf -pdflatex=''texexec --xtx''',
+        \}
+
+        let g:vimtex_compiler_latexrun_engines = {
+        \ '_'                : 'lualatex',
+        \ 'pdflatex'         : 'pdflatex',
+        \ 'lualatex'         : 'lualatex',
+        \ 'xelatex'          : 'xelatex',
+        \}
+      ]]
+    end
+  },
 
   {
     "ThePrimeagen/harpoon",
