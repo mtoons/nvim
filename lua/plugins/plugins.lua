@@ -42,29 +42,6 @@ return {
   },
 
   {
-    "ThePrimeagen/harpoon",
-    branch = "harpoon2",
-    dependencies = {"nvim-lua/plenary.nvim"},
-    config = function()
-      local harpoon = require("harpoon")
-
-      harpoon:setup()
-
-      vim.keymap.set("n", "<leader>a", function() harpoon:list():append() end)
-      vim.keymap.set("n", "<C-e>", function() harpoon.ui:toggle_quick_menu(harpoon:list()) end)
-
-      vim.keymap.set("n", "<C-&>", function() harpoon:list():select(1) end)
-      vim.keymap.set("n", "<C-é>", function() harpoon:list():select(2) end)
-      vim.keymap.set("n", '<C-">', function() harpoon:list():select(3) end)
-      vim.keymap.set("n", "<C-'>", function() harpoon:list():select(4) end)
-
-      -- Toggle previous & next buffers stored within Harpoon list
-      vim.keymap.set("n", "<C-S-P>", function() harpoon:list():prev() end)
-      vim.keymap.set("n", "<C-S-N>", function() harpoon:list():next() end)
-    end,
-  },
-
-  {
     'stevearc/conform.nvim',
     opts = {
       formatters_by_ft = {
@@ -207,7 +184,7 @@ return {
         { remap = true, desc = '[H]op [W]ords' })
       vim.keymap.set('', '<leader>hl', hop.hint_lines, { remap = true, desc = '[H]op [L]ines' })
       vim.keymap.set('', '<leader>hL', hop.hint_lines, { remap = true, desc = '[H]op [L]ines' })
-      vim.keymap.set('', '<leader>ha', hop.hint_anywhere, { remap = true, desc = '[H]op [A]nywhere' })
+      -- vim.keymap.set('', '<leader>ha', hop.hint_anywhere, { remap = true, desc = '[H]op [A]nywhere' })
     end,
   },
 
@@ -222,11 +199,11 @@ return {
     "folke/drop.nvim",
     event = "VimEnter",
     opts = {
-      theme = "xmas",            -- "leaves", "snow", "stars", "xmas", "spring", "summer"
-      max = 40,                    -- maximum number of drops on the screen
-      interval = 150,              -- every 150ms we update the drops
+      theme = "xmas",               -- "leaves", "snow", "stars", "xmas", "spring", "summer"
+      max = 40,                     -- maximum number of drops on the screen
+      interval = 150,               -- every 150ms we update the drops
       screensaver = 1000 * 60 * 30, -- show after 5 minutes. Set to false, to disable
-      filetypes = {},              -- will enable/disable automatically for the following filetypes
+      filetypes = {},               -- will enable/disable automatically for the following filetypes
     }
   },
 
@@ -257,15 +234,6 @@ return {
   },
 
   {
-    "simrat39/rust-tools.nvim",
-    ft = "rust",
-    dependencies = { 'neovim/nvim-lspconfig', 'nvim-lua/plenary.nvim', 'mfussenegger/nvim-dap' },
-    config = function()
-      require("rust-tools").setup({})
-    end
-  }, -- Lua
-
-  {
     "folke/trouble.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     opts = {
@@ -294,7 +262,7 @@ return {
     opts = {
       open_mapping = [[<c-t>]],
       direction = 'horizontal',
-      shell = "pwsh",
+      shell = "nu",
       -- winbar = { enabled = true },
     },
   },
